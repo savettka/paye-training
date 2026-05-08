@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Benison Solvers Limited - Advanced PAYE MCQ Trainer</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--accent1:#22c55e;--accent2:#3b82f6;--danger:#ef4444;--text:#e5e7eb}
+  body{margin:0;font-family:Arial;background:var(--bg);color:var(--text)}
+  header{text-align:center;padding:15px;background:linear-gradient(90deg,var(--accent2),var(--accent1));color:#fff}
+  .wrap{max-width:800px;margin:30px auto;padding:10px}
+  .card{background:linear-gradient(135deg,var(--card),var(--card2));padding:20px;border-radius:15px}
+  .question{font-weight:bold;margin-bottom:15px}
+  .opt{padding:10px;margin:8px 0;background:#020617;border-radius:10px;cursor:pointer}
+  .opt.correct{background:#14532d}
+  .opt.wrong{background:#7f1d1d}
+  .msg{margin-top:10px}
+  .explain{display:none;margin-top:10px}
+  button{margin-top:10px;padding:10px;background:linear-gradient(90deg,var(--accent2),var(--accent1));border:none;border-radius:8px;color:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+<h2>Benison Solvers Limited</h2>
+<p>Advanced PAYE MCQ Trainer</p>
+</header>
+<div class="wrap">
+<div class="card">
+<div id="question"></div>
+<div id="options"></div>
+<div class="msg" id="msg"></div>
+<div class="explain" id="explain"></div>
+<button id="next" disabled>Next</button>
+</div>
+</div>
+<script>
+const quiz=[
+{q:"What is PAYE?",options:["Tax system","Loan","VAT","Benefit"],answer:0,exp:"PAYE = Pay As You Earn tax system"},
+{q:"NIC employee rate approx?",options:["8%","20%","3%","40%"],answer:0,exp:"Employee NIC main rate ~8%"},
+{q:"FPS is submitted when?",options:["Year end","Before payday","Monthly","Quarterly"],answer:1,exp:"FPS must be sent on or before payday"}
+];
+
+let i=0,score=0,wrong=0;
+const q=document.getElementById('question');
+const opt=document.getElementById('options');
+const msg=document.getElementById('msg');
+const exp=document.getElementById('explain');
+const next=document.getElementById('next');
+
+function load(){
+ let cur=quiz[i];
+ q.innerHTML=`<b>Q${i+1}:</b> ${cur.q}`;
+ opt.innerHTML="";
+ msg.textContent="";
+ exp.style.display="none";
+ next.disabled=true;
+ cur.options.forEach((o,idx)=>{
+  let d=document.createElement('div');
+  d.className='opt';
+  d.innerText=o;
+  d.onclick=()=>check(idx,d);
+  opt.appendChild(d);
+ });
+}
+
+function check(idx,el){
+ let cur=quiz[i];
+ if(idx===cur.answer){
+  el.classList.add('correct');
+  msg.innerText="Correct";
+  exp.style.display="block";
+  exp.innerText=cur.exp;
+  score++;
+  next.disabled=false;
+ }else{
+  el.classList.add('wrong');
+  msg.innerText="Wrong, try again";
+  wrong++;
+ }
+}
+
+next.onclick=()=>{
+ if(i<quiz.length-1){i++;load()}
+ else{
+  q.innerText="Completed";
+  opt.innerHTML="";
+  msg.innerHTML=`Correct: ${score} <br> Wrong: ${wrong}`;
+  exp.style.display="none";
+  next.style.display="none";
+ }
+}
+
+load();
+</script>
+</body>
+</html>
